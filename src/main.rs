@@ -2,8 +2,9 @@ mod thread_handler;
 
 use std::io::prelude::*;
 use std::net::{TcpListener, TcpStream};
+use std::str;
 
-const REQUEST_AMOUNT: usize = 2;
+const REQUEST_AMOUNT: usize = 100;
 const THREAD_AMOUNT: usize = 8;
 
 fn main() -> std::io::Result<()> {
@@ -21,7 +22,11 @@ fn main() -> std::io::Result<()> {
 }
 
 fn handle_client(mut stream: TcpStream) {
-    let mut buffer = [0; 2048];
+    let mut buffer = vec![0; 4096];
     let bytes_read = stream.read(&mut buffer).unwrap();
     println!("bytes read: {}", bytes_read);
+    println!(
+        "Buffer currently holds: {:?}",
+        str::from_utf8(&buffer[0..bytes_read]).unwrap()
+    );
 }
